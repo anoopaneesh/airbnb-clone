@@ -1,4 +1,6 @@
 import { GetServerSideProps } from "next"
+import exploreData from "../data/exploreData"
+import liveData from "../data/liveData"
 import Banner from "../components/Banner"
 import BigCard from "../components/BigCard"
 import Footer from "../components/Footer"
@@ -54,7 +56,7 @@ const index = ({exploreData,liveData} : IndexProps) => {
 export default index
 
 export const getServerSideProps : GetServerSideProps = async(context) => {
-  let {exploreData,liveData} = await fetch('http://localhost:3000/api/home').then(res => res.json())
+  
 
   return {
     props:{
