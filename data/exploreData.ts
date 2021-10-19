@@ -1,3 +1,8 @@
+export interface Explore{
+    place:string
+    image:string
+    distance:string
+  }
 export default [{
     place:'Bengaluru',
     distance:'8-hour drive',

@@ -1,3 +1,7 @@
+export interface Live{
+    title:string
+    image:string
+  }
 export default [{
     title:'Outdoor getaways',
     image:'https://res.cloudinary.com/anoopaneesh/image/upload/v1634532215/airbnb/2f13349d-879d-43c6-83e3-8e5679291d53_tgt6rf.png'

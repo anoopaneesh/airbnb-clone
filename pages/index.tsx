@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next"
-import exploreData from "../data/exploreData"
-import liveData from "../data/liveData"
+import exploreData, { Explore } from "../data/exploreData"
+import liveData, { Live } from "../data/liveData"
 import Banner from "../components/Banner"
 import BigCard from "../components/BigCard"
 import Footer from "../components/Footer"
@@ -12,15 +12,8 @@ interface IndexProps{
   exploreData : Explore[]
   liveData:Live[]
 }
-interface Live{
-  title:string
-  image:string
-}
-interface Explore{
-  place:string
-  image:string
-  distance:string
-}
+
+
 
 const index = ({exploreData,liveData} : IndexProps) => {
   return (
@@ -56,8 +49,6 @@ const index = ({exploreData,liveData} : IndexProps) => {
 export default index
 
 export const getServerSideProps : GetServerSideProps = async(context) => {
-  
-
   return {
     props:{
       exploreData,
