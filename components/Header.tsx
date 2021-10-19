@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import logo from "../images/airbnb.png";
+import logoWhite from "../images/airbnb-white.png";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRange, DateRangePicker } from "react-date-range";
@@ -14,8 +15,9 @@ import {
 import { useRouter } from "next/dist/client/router";
 interface HeaderProps{
   placeholder?:string
+  navbarState?:boolean
 }
-const Header = ({placeholder}:HeaderProps) => {
+const Header = ({placeholder,navbarState}:HeaderProps) => {
   const router = useRouter()
   const [searchInput, setSearchInput] = useState("");
   const [startDate, setStartDate] = useState(new Date());
@@ -44,12 +46,13 @@ const Header = ({placeholder}:HeaderProps) => {
       }
     })
   }
+  
   return (
-    <header className="bg-white shadow-md sticky top-0 z-10 grid grid-cols-3 p-5 md:px-10 items-center">
+    <header className={navbarState ? 'navbar' : 'navbar-active'}>
       {/* Left */}
-      <div onClick={()=>{router.push('/')}} className="relative flex items-center h-10 cursor-pointer my-auto">
+      <div onClick={()=>{router.push('/')}} className="relative flex items-center h-8 cursor-pointer my-auto">
         <Image
-          src={logo}
+          src={navbarState ? logo : logoWhite}
           alt="logo"
           layout="fill"
           objectFit="contain"
@@ -57,7 +60,8 @@ const Header = ({placeholder}:HeaderProps) => {
         />
       </div>
       {/* Middle Search */}
-      <div className="flex items-center md:border-2 p-2 md:shadow-sm rounded-full">
+      <div></div>
+      <div className={`search ${!navbarState ? 'translate-y-14 md:translate-y-16 w-1/2' : 'translate-y-0'}`}>
         <input
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
@@ -65,20 +69,15 @@ const Header = ({placeholder}:HeaderProps) => {
           placeholder={placeholder || "Start your search"}
           className="w-full md:flex-grow text-gray-500 bg-transparent outline-none mx-2"
         />
-        <SearchIcon className="cursor-pointer hidden md:inline-flex h-8 p-2 bg-red-400 text-white rounded-full" />
+       <div onClick={search} className="cursor-pointer hidden md:inline-flex p-2 bg-red-400 text-white rounded-full items-center space-x-2">
+          
+          <SearchIcon className="h-5" />
+          {!navbarState && <p>Search</p>}
+         </div>
+         
       </div>
-      {/* Right */}
-      <div className="text-gray-600 flex space-x-4 items-center justify-end">
-        <h2 className="cursor-pointer hidden md:inline-flex">Become a host</h2>
-        <GlobeAltIcon className="h-6 cursor-pointer" />
-        <div className="flex items-center space-x-2 rounded-full border-2 p-2">
-          <MenuIcon className="h-6 cursor-pointer" />
-          <UserCircleIcon className="h-6 cursor-pointer" />
-        </div>
-      </div>
-      {/* Calender */}
       {searchInput && (
-        <div className="col-span-3 mx-auto my-5">
+        <div className={`calender ${navbarState ? 'translate-y-0' : 'translate-y-14' }`}>
           <div className="hidden sm:inline-flex">
             <DateRangePicker
               ranges={[selectionRange]}
@@ -102,10 +101,21 @@ const Header = ({placeholder}:HeaderProps) => {
           </div>
           <div className="flex mt-5">
             <button className="flex-grow text-gray-500" onClick={resetInput}>Cancel</button>
-            <button className="flex-grow text-red-400" onClick={search}>Submit</button>
+            <button className="flex-grow text-red-400" onClick={search}>Search</button>
           </div>
         </div>
       )}
+      {/* Right */}
+      <div className="text-gray-600 flex space-x-4 items-center justify-end">
+        <h2 className={`cursor-pointer hidden md:inline-flex ${navbarState ? 'text-black' : 'text-white'}`}>Become a host</h2>
+        <GlobeAltIcon className={`h-6 cursor-pointer ${navbarState ? 'text-black' : 'text-white'}`} />
+        <div className="bg-white flex items-center space-x-2 rounded-full border-2 p-2">
+          <MenuIcon className="h-6 cursor-pointer" />
+          <UserCircleIcon className="h-6 cursor-pointer" />
+        </div>
+      </div>
+      {/* Calender */}
+      
     </header>
   );
 };

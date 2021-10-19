@@ -8,17 +8,44 @@ import Header from "../components/Header"
 import MediumCard from "../components/MediumCard"
 import SmallCard from "../components/SmallCard"
 import big from '../images/big.png'
+import { useEffect, useRef, useState } from "react"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid"
 interface IndexProps{
   exploreData : Explore[]
   liveData:Live[]
 }
 
-
-
 const index = ({exploreData,liveData} : IndexProps) => {
+  const [mediumContainerLeft,setMediumContainerLeft] = useState(0)
+  const [navbarState,setNavbarState] = useState(false)
+  const mediumRef = useRef<HTMLDivElement>(null)
+  const scrollRight = () => {
+    mediumRef.current?.scroll({
+      left:500
+    })
+
+    mediumRef.current && setMediumContainerLeft(mediumRef.current.scrollLeft)
+  }
+  const scrollLeft = () => {
+    mediumRef.current?.scroll({
+      left:-500
+    })
+    mediumRef.current && setMediumContainerLeft(mediumRef.current.scrollLeft)
+  }
+  useEffect(()=>{
+    const handleScroll = () => {
+      if(window.scrollY > 2){
+        setNavbarState(true)
+      }else{
+        setNavbarState(false)
+      }
+    }
+    window.addEventListener('scroll',handleScroll)
+    return ()=> window.removeEventListener('scroll',handleScroll)
+  },[])
   return (
     <div>
-      <Header />
+      <Header navbarState={navbarState}/>
       <Banner />
       <main className="max-w-7xl mx-auto px-8 sm:px-10">
         <section className="my-10">
@@ -29,13 +56,20 @@ const index = ({exploreData,liveData} : IndexProps) => {
           ))}
           </div>
         </section>
-        <section>
+        <section className="relative">
           <h2 className="text-3xl font-bold">Live Anywhere</h2>
-          <div className="flex space-x-4 overflow-scroll scrollbar-hide p-3 -ml-3">
+          <div className="flex space-x-4 overflow-scroll scrollbar-hide p-3 -ml-3" ref={mediumRef}>
             {liveData.map(({image,title}) => (
               <MediumCard key={title} title={title} image={image} />
             ))}
+  
           </div>
+           <div onClick={scrollRight} className="hidden hover:shadow-xl md:inline-block cursor-pointer absolute right-0 translate-x-1/2 top-1/2 shadow-lg p-4 bg-gray-50 rounded-full ">
+            <ChevronRightIcon className="h-6"/>
+          </div>
+          {mediumContainerLeft > 0 && <div onClick={scrollLeft} className="hidden hover:shadow-xl md:inline-block cursor-pointer absolute left-0 -translate-x-1/2 top-1/2 shadow-lg p-4 bg-gray-50 rounded-full ">
+            <ChevronLeftIcon className="h-6"/>
+          </div>}
         </section>
         <section>
           <BigCard title="Try hosting" subtitle="Earn extra income and unlock new opportunities by sharing your space" btnText="Learn more" image={big} />

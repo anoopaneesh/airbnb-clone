@@ -24,9 +24,9 @@ const search = ({query,hotels}:SearchPageProps) => {
 
   return (
     <div>
-      <Header placeholder={`${location} | ${range} | ${noOfGuests} guests`}/>
+      <Header placeholder={`${location} | ${range} | ${noOfGuests} guests`} navbarState={true}/>
 
-      <main className="flex max-h-screen">
+      <main className="flex max-h-screen pt-20">
         <section className="flex-grow mt-10 px-8 md:px-10 overflow-scroll scrollbar-hide">
           <p className="text-sm">
             300+ stays · {range} . {noOfGuests} Guests{" "}
@@ -38,7 +38,7 @@ const search = ({query,hotels}:SearchPageProps) => {
             <p className="filter-btn">Rooms and beds</p>
             <p className="filter-btn">More filters</p>
           </div>
-          <div>
+          <div className="flex flex-col">
             {hotels.map(hotel => (
               <SearchCard key={hotel.id} hotel={hotel}/>  
             ))}
