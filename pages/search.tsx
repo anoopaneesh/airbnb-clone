@@ -4,6 +4,7 @@ import hotelsData, { Hotel } from "../data/hotelsData";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import SearchCard from "../components/SearchCard";
+import Map from "../components/Map";
 interface Query{
   location: string;
   startDate: string;
@@ -25,8 +26,8 @@ const search = ({query,hotels}:SearchPageProps) => {
     <div>
       <Header placeholder={`${location} | ${range} | ${noOfGuests} guests`}/>
 
-      <main className="flex">
-        <section className="flex-grow mt-10 px-8 md:px-10">
+      <main className="flex max-h-screen">
+        <section className="flex-grow mt-10 px-8 md:px-10 overflow-scroll scrollbar-hide">
           <p className="text-sm">
             300+ stays · {range} . {noOfGuests} Guests{" "}
           </p>
@@ -42,6 +43,9 @@ const search = ({query,hotels}:SearchPageProps) => {
               <SearchCard key={hotel.id} hotel={hotel}/>  
             ))}
           </div>
+        </section>
+        <section className="hidden xl:inline-flex xl:min-w-[600px]">
+          <Map searchResults={hotels}/>
         </section>
       </main>
 

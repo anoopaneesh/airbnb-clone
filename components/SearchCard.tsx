@@ -10,18 +10,18 @@ const SearchCard = ({hotel}:SearchCardProps) => {
     return (
         <div className="flex space-x-2 w-full p-2 pr-4 my-2 hover:bg-gray-100 cursor-pointer rounded-xl shadow-sm hover:shadow-md transition transform duration-200 ease-out">
             {/* Left */}
-            <div className="relative w-48 sm:w-72 h-48 ">
+            <div className="relative hidden sm:inline-flex sm:w-48 sm:w-72 h-48 ">
                 <Image src={thumbnail} layout="fill" objectFit="cover" className="rounded-lg"/>
             </div>
             {/* Right */}
             <div className="flex-grow flex flex-col">
                 {/* Top */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between space-x-2">
                     <div className="">
                         <p className="text-sm text-gray-500">{place}</p>
                         <h1 className="text-lg">{title}</h1>
                     </div>
-                    <HeartIcon className="h-8" />
+                    <HeartIcon className="h-8"/>
                 </div>
                 {/* Middle */}
                 <div className="border-t-2 w-12 my-1"></div>
