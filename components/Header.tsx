@@ -1,24 +1,30 @@
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import logo from "../images/airbnb.png";
+import Image from "next/image";
 import logoWhite from "../images/airbnb-white.png";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRange, DateRangePicker } from "react-date-range";
+import {  Menu, Transition } from '@headlessui/react'
 import {
   SearchIcon,
   GlobeAltIcon,
   MenuIcon,
   UserCircleIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  XIcon
 } from "@heroicons/react/solid";
 import { useRouter } from "next/dist/client/router";
+import { useDialog } from "../context/DialogContext";
+import { useAuth } from "../context/AuthContext";
 interface HeaderProps{
   placeholder?:string
   navbarState?:boolean
 }
 const Header = ({placeholder,navbarState}:HeaderProps) => {
   const router = useRouter()
+  const {user,signOut} = useAuth()
+  const {setIsOpen} = useDialog()
   const [searchInput, setSearchInput] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -36,6 +42,7 @@ const Header = ({placeholder,navbarState}:HeaderProps) => {
     setSearchInput("")
   }
   const search = () => {
+    setSearchInput("")
     router.push({
       pathname:'/search',
       query:{
@@ -48,6 +55,7 @@ const Header = ({placeholder,navbarState}:HeaderProps) => {
   }
   
   return (
+    <>
     <header className={navbarState ? 'navbar' : 'navbar-active'}>
       {/* Left */}
       <div onClick={()=>{router.push('/')}} className="relative flex items-center h-8 cursor-pointer my-auto">
@@ -109,14 +117,43 @@ const Header = ({placeholder,navbarState}:HeaderProps) => {
       <div className="text-gray-600 flex space-x-4 items-center justify-end">
         <h2 className={`cursor-pointer hidden md:inline-flex ${navbarState ? 'text-black' : 'text-white'}`}>Become a host</h2>
         <GlobeAltIcon className={`h-6 cursor-pointer ${navbarState ? 'text-black' : 'text-white'}`} />
-        <div className="bg-white flex items-center space-x-2 rounded-full border-2 p-2">
+        <Menu as="div" className="relative">
+          <Menu.Button><div className="bg-white flex items-center space-x-2 rounded-full border-2 p-2">
           <MenuIcon className="h-6 cursor-pointer" />
           <UserCircleIcon className="h-6 cursor-pointer" />
-        </div>
+        </div></Menu.Button>
+        <Transition
+        enter="transition duration-100 ease-out"
+        enterFrom="transform scale-95 opacity-0"
+        enterTo="transform scale-100 opacity-100"
+        leave="transition duration-75 ease-out"
+        leaveFrom="transform scale-100 opacity-100"
+        leaveTo="transform scale-95 opacity-0"
+      >
+        <Menu.Items className="bg-white absolute translate-y-6 -translate-x-28  w-48 rounded-md shadow-lg">
+          {user ? (<>
+          <Menu.Item>
+            {({active})=>(<div className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black font-bold">Trips</a></div>)}
+          </Menu.Item>
+          <Menu.Item>
+            {({active})=>(<div className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black font-bold">Account</a></div>)}
+          </Menu.Item>
+          <Menu.Item>
+            {({active})=>(<div onClick={()=>signOut()} className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black">Log out</a></div>)}
+          </Menu.Item></>):(<><Menu.Item>
+            {({active})=>(<div onClick={()=>setIsOpen(true)} className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black">Log in</a></div>)}
+          </Menu.Item>
+          <Menu.Item>
+            {({active})=>(<div onClick={()=>setIsOpen(true)} className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black">Sign up</a></div>)}
+          </Menu.Item></>)}
+          
+        </Menu.Items>
+        </Transition>
+        </Menu>
       </div>
-      {/* Calender */}
-      
     </header>
+   
+  </>
   );
 };
 

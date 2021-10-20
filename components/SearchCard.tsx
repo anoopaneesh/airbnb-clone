@@ -2,15 +2,31 @@ import Image from 'next/image'
 import { Hotel } from '../data/hotelsData'
 import {HeartIcon} from '@heroicons/react/outline'
 import {StarIcon} from '@heroicons/react/solid'
+import { useAuth } from '../context/AuthContext'
+import { useRouter } from 'next/dist/client/router'
 interface SearchCardProps{
  hotel:Hotel
 }
 const SearchCard = ({hotel}:SearchCardProps) => {
+    const {user} = useAuth()
+    const router = useRouter()
+    const handleBookNow = () => {
+        if(user){
+            let oldQ = router.query
+            router.push({
+                pathname:'/checkout',
+                query:{
+                    id:hotel.id,
+                    ...oldQ,
+                }
+            })
+        }
+    }
     const {bathrooms,place,title,bedrooms,beds,features,guests,id,ratePerMonth,rating,thumbnail} = hotel
     return (
         <div className="flex space-x-2 w-full p-2 pr-4 my-2 hover:bg-gray-100 cursor-pointer rounded-xl shadow-sm hover:shadow-md transition transform duration-200 ease-out">
             {/* Left */}
-            <div className="relative hidden sm:inline-flex sm:w-48 sm:w-72 h-48 ">
+            <div className="relative hidden sm:inline-flex sm:w-72 h-48 ">
                 <Image src={thumbnail} layout="fill" objectFit="cover" className="rounded-lg"/>
             </div>
             {/* Right */}
@@ -35,7 +51,10 @@ const SearchCard = ({hotel}:SearchCardProps) => {
                         <StarIcon className="text-red-400 h-5" />
                     <p>{rating || '-'}</p>
                     </div>
+                   <div>
                     <p>{`${ratePerMonth}`}<span className="text-gray-500">/ month</span></p>
+                    {user && <button onClick={handleBookNow} className="p-2 rounded-md bg-red-400 hover:bg-red-300 text-white w-full mt-4">Book now</button>}
+                   </div>
                 </div>
             </div>
         </div>

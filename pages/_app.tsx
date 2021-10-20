@@ -2,6 +2,8 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import ProgressBar from "@badrap/bar-of-progress";
 import { Router } from 'next/dist/client/router';
+import DialogProvider from '../context/DialogContext';
+import AuthProvider from '../context/AuthContext';
 
 const progress = new ProgressBar({
   size:4,
@@ -15,6 +17,13 @@ Router.events.on('routeChangeComplete',progress.finish)
 Router.events.on('routeChangeError',progress.finish)
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+  <AuthProvider>
+  <DialogProvider>
+    <Component {...pageProps} />
+  </DialogProvider>
+  </AuthProvider>
+  )
+    
 }
 export default MyApp
