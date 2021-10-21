@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Image from 'next/image'
 import ReactMapGL, { Marker, Popup, ViewportProps } from "react-map-gl";
-import { Hotel } from "../data/hotelsData";
+import { Hotel } from "../types/Hotels";
 import { StarIcon } from "@heroicons/react/solid";
 interface MapProps {
   searchResults: Hotel[];

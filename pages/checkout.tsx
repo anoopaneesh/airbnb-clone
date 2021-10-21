@@ -1,15 +1,18 @@
 import Image from 'next/image'
 import { connectToDatabase } from '../utils/mongodb'
+import Head from 'next/head'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
-import { GetServerSideProps } from "next"
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
-import {Hotel} from '../data/hotelsData'
+import Hotel from '../types/Hotels'
 import { differenceInDays, format } from 'date-fns'
 import { StarIcon } from '@heroicons/react/solid'
 import currency from 'currency.js'
 import collections from '../utils/collections'
 import { ObjectId } from 'mongodb'
+import Booking from '../types/Booking'
+import RazorpayOrder from '../types/RazorpayOrder'
+import razorpay from '../utils/razorpay'
 interface CheckoutProps{
     hotel:Hotel
     startDate:string
@@ -25,25 +28,35 @@ const checkout = ({hotel,startDate,endDate,noOfGuests}:CheckoutProps) => {
     const ratePerDay = currency(hotel.ratePerMonth).divide(28).value
     const rateForTotalDays  = currency(hotel.ratePerMonth).divide(28).multiply(noOfDays).value
     const totalINR = rateForTotalDays+390+622.05
+    console.log()
     const handlePayment = async() => {
-        let response = await fetch('/api/checkout',{
+        const booking : Booking = {
+            startDate,
+            endDate,
+            noOfDays,
+            noOfGuests:Number(noOfGuests),
+            user_id:user?.sub || "",
+            hotel_id:hotel._id,
+            total:Number(totalINR.toFixed(0))
+        } 
+        let response : RazorpayOrder = await fetch('/api/checkout',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
             },
-            body:JSON.stringify({
-                startDate,
-                endDate,
-                noOfDays,
-                noOfGuests,
-                user_id:user?.sub,
-                hotel_id:hotel._id
-            })
+            body:JSON.stringify(booking)
         }).then(res => res.json())
-        console.log(response)
+        const options = razorpay.getOptions(response)
+        const _window = window as any
+        const rzp1 = new _window.Razorpay(options);
+        rzp1.open()
     }
     return (
         <div>
+            <Head>
+                <title>Checkout</title>
+                <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            </Head>
             <Header  navbarState={true}/>
             <main className="max-w-7xl mx-auto px-8 pt-32 pb-10">
             <h1 className="text-3xl font-bold">Confirm Booking</h1>

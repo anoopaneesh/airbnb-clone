@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { connectToDatabase } from "../utils/mongodb";
 import collections from "../utils/collections";
 import { GetServerSideProps } from "next";
-import { Hotel } from "../data/hotelsData";
+import { Hotel } from "../types/Hotels";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import SearchCard from "../components/SearchCard";

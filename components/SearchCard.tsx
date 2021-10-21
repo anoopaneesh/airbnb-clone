@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Hotel } from '../data/hotelsData'
+import  Hotel  from '../types/Hotels'
 import {HeartIcon} from '@heroicons/react/outline'
 import {StarIcon} from '@heroicons/react/solid'
 import { useRouter } from 'next/dist/client/router'

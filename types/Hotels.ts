@@ -1,4 +1,4 @@
-export interface Hotel{
+export default interface Hotel{
   "place": string
       "title": string
       "features": string[]
