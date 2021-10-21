@@ -1,5 +1,6 @@
 import { useState } from "react";
 import logo from "../images/airbnb.png";
+import Link from 'next/link'
 import Image from "next/image";
 import logoWhite from "../images/airbnb-white.png";
 import "react-date-range/dist/styles.css"; // main style file
@@ -133,7 +134,7 @@ const Header = ({placeholder,navbarState}:HeaderProps) => {
             {({active})=>(<a><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black font-bold">Trips</p></div></a>)}
           </Menu.Item>
           <Menu.Item>
-            {({active})=>(<a><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black font-bold">Account</p></div></a>)}
+            {({active})=>(<a href="/profile"><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black font-bold">Account</p></div></a>)}
           </Menu.Item>
           <Menu.Item>
             {({active})=>(<a href="/api/auth/logout"><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black">Log out</p></div></a>)}
