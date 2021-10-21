@@ -1,6 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import Head from 'next/head'
 import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
@@ -9,15 +10,15 @@ import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 const profile = () => {
   const gender_list = ["Not specified", "Male", "Female"];
   const { user } = useUser();
-  console.log(user);
   const [editName, setEditName] = useState(false);
   const [editGender, setEditGender] = useState(false);
   const [gender, setGender] = useState(gender_list[0]);
   const [editEmail, setEditEmail] = useState(false);
   return (
     <div>
+        <Head><title>Account | Airbnb-clone</title></Head>
       <Header navbarState={true} />
-      <main className="max-w-5xl pt-36 mx-auto pb-10">
+      <main className="max-w-5xl pt-36 mx-auto pb-10 px-8 sm:px-4">
         <section className="space-y-10">
           <h1 className="text-4xl font-bold">Account</h1>
           <div className="max-w-md space-y-2">
