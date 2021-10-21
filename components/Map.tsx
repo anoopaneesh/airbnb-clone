@@ -46,7 +46,7 @@ const Map = ({ searchResults }: MapProps) => {
       }
     >
       {searchResults.map((item) => (
-        <div key={item.id} onClick={() => setSelectedPin(item)}>
+        <div key={item._id} onClick={() => setSelectedPin(item)}>
           <Marker
             longitude={Number(item.lon)}
             latitude={Number(item.lat)}
@@ -58,7 +58,7 @@ const Map = ({ searchResults }: MapProps) => {
             </div>
             
           </Marker>
-          {selectedPin && selectedPin.id === item.id ? (
+          {selectedPin && selectedPin.id === item._id ? (
               <Popup
                 closeOnClick={true}
                 closeButton={false}

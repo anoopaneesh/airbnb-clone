@@ -1,6 +1,8 @@
 import { format } from "date-fns";
+import { connectToDatabase } from "../utils/mongodb";
+import collections from "../utils/collections";
 import { GetServerSideProps } from "next";
-import hotelsData, { Hotel } from "../data/hotelsData";
+import { Hotel } from "../data/hotelsData";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import SearchCard from "../components/SearchCard";
@@ -21,7 +23,6 @@ const search = ({query,hotels}:SearchPageProps) => {
   const formattedStartDate = format(new Date(startDate), "dd MMMM yy");
   const formattedEndDate = format(new Date(endDate), "dd MMMM yy");
   const range = `${formattedStartDate} - ${formattedEndDate}`;
-
   return (
     <div>
       <Header placeholder={`${location} | ${range} | ${noOfGuests} guests`} navbarState={true}/>
@@ -40,7 +41,7 @@ const search = ({query,hotels}:SearchPageProps) => {
           </div>
           <div className="flex flex-col">
             {hotels.map(hotel => (
-              <SearchCard key={hotel.id} hotel={hotel}/>  
+              <SearchCard key={hotel._id} hotel={hotel}/>  
             ))}
           </div>
         </section>
@@ -57,11 +58,12 @@ const search = ({query,hotels}:SearchPageProps) => {
 export default search;
 
 export const getServerSideProps : GetServerSideProps = async(context) => {
-    
+    const {db} = await connectToDatabase()
+    let hotelsData = await db.collection(collections.HOTELS).find().toArray()
     return {
         props:{
           query:context.query,
-          hotels:hotelsData
+          hotels:JSON.parse(JSON.stringify(hotelsData))
         }
     }
 }

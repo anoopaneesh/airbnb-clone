@@ -1,6 +1,8 @@
-import { GetServerSideProps } from "next"
-import exploreData, { Explore } from "../data/exploreData"
-import liveData, { Live } from "../data/liveData"
+import { GetStaticProps } from "next"
+import { connectToDatabase } from "../utils/mongodb"
+import collections from "../utils/collections"
+import { Explore } from "../data/exploreData"
+import { Live } from "../data/liveData"
 import Banner from "../components/Banner"
 import BigCard from "../components/BigCard"
 import Footer from "../components/Footer"
@@ -82,11 +84,14 @@ const index = ({exploreData,liveData} : IndexProps) => {
 
 export default index
 
-export const getServerSideProps : GetServerSideProps = async(context) => {
+export const getStaticProps : GetStaticProps = async(context) => {
+  const {db} = await connectToDatabase()
+  const exploreData = await db.collection(collections.EXPLORE).find().toArray()
+  const liveData = await db.collection(collections.LIVE_ANYWHERE).find().toArray()
   return {
     props:{
-      exploreData,
-      liveData
+      exploreData:JSON.parse(JSON.stringify(exploreData)),
+      liveData:JSON.parse(JSON.stringify(liveData)),
     }
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import logo from "../images/airbnb.png";
 import Image from "next/image";
 import logoWhite from "../images/airbnb-white.png";
@@ -12,19 +12,16 @@ import {
   MenuIcon,
   UserCircleIcon,
   UserGroupIcon,
-  XIcon
 } from "@heroicons/react/solid";
 import { useRouter } from "next/dist/client/router";
-import { useDialog } from "../context/DialogContext";
-import { useAuth } from "../context/AuthContext";
+import { useUser } from "@auth0/nextjs-auth0";
 interface HeaderProps{
   placeholder?:string
   navbarState?:boolean
 }
 const Header = ({placeholder,navbarState}:HeaderProps) => {
   const router = useRouter()
-  const {user,signOut} = useAuth()
-  const {setIsOpen} = useDialog()
+  const {user} = useUser()
   const [searchInput, setSearchInput] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -133,18 +130,18 @@ const Header = ({placeholder,navbarState}:HeaderProps) => {
         <Menu.Items className="bg-white absolute translate-y-6 -translate-x-28  w-48 rounded-md shadow-lg">
           {user ? (<>
           <Menu.Item>
-            {({active})=>(<div className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black font-bold">Trips</a></div>)}
+            {({active})=>(<a><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black font-bold">Trips</p></div></a>)}
           </Menu.Item>
           <Menu.Item>
-            {({active})=>(<div className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black font-bold">Account</a></div>)}
+            {({active})=>(<a><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black font-bold">Account</p></div></a>)}
           </Menu.Item>
           <Menu.Item>
-            {({active})=>(<div onClick={()=>signOut()} className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black">Log out</a></div>)}
+            {({active})=>(<a href="/api/auth/logout"><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black">Log out</p></div></a>)}
           </Menu.Item></>):(<><Menu.Item>
-            {({active})=>(<div onClick={()=>setIsOpen(true)} className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black">Log in</a></div>)}
+            {({active})=>(<a href="/api/auth/login"><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black">Log in</p></div></a>)}
           </Menu.Item>
           <Menu.Item>
-            {({active})=>(<div onClick={()=>setIsOpen(true)} className={active ? "menu-item-active" : "menu-item"}><a className="text-lg text-black">Sign up</a></div>)}
+            {({active})=>(<a href="/api/auth/login"><div  className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black">Sign up</p></div></a>)}
           </Menu.Item></>)}
           
         </Menu.Items>

@@ -2,13 +2,13 @@ import Image from 'next/image'
 import { Hotel } from '../data/hotelsData'
 import {HeartIcon} from '@heroicons/react/outline'
 import {StarIcon} from '@heroicons/react/solid'
-import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/dist/client/router'
+import { useUser } from '@auth0/nextjs-auth0'
 interface SearchCardProps{
  hotel:Hotel
 }
 const SearchCard = ({hotel}:SearchCardProps) => {
-    const {user} = useAuth()
+    const {user} = useUser()
     const router = useRouter()
     const handleBookNow = () => {
         if(user){
@@ -16,13 +16,13 @@ const SearchCard = ({hotel}:SearchCardProps) => {
             router.push({
                 pathname:'/checkout',
                 query:{
-                    id:hotel.id,
+                    id:hotel._id,
                     ...oldQ,
                 }
             })
         }
     }
-    const {bathrooms,place,title,bedrooms,beds,features,guests,id,ratePerMonth,rating,thumbnail} = hotel
+    const {bathrooms,place,title,bedrooms,beds,features,guests,_id,ratePerMonth,rating,thumbnail} = hotel
     return (
         <div className="flex space-x-2 w-full p-2 pr-4 my-2 hover:bg-gray-100 cursor-pointer rounded-xl shadow-sm hover:shadow-md transition transform duration-200 ease-out">
             {/* Left */}

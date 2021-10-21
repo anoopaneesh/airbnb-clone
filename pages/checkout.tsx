@@ -1,13 +1,15 @@
 import Image from 'next/image'
-import check from '../images/check.jpg'
+import { connectToDatabase } from '../utils/mongodb'
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import { GetServerSideProps } from "next"
-import hotelsData from '../data/hotelsData'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
 import {Hotel} from '../data/hotelsData'
 import { differenceInDays, format } from 'date-fns'
 import { StarIcon } from '@heroicons/react/solid'
 import currency from 'currency.js'
+import collections from '../utils/collections'
+import { ObjectId } from 'mongodb'
 interface CheckoutProps{
     hotel:Hotel
     startDate:string
@@ -15,14 +17,30 @@ interface CheckoutProps{
     noOfGuests:string
 }
 const checkout = ({hotel,startDate,endDate,noOfGuests}:CheckoutProps) => {
+    const {user} = useUser()
     const formattedStartDate = format(new Date(startDate), "dd MMMM yy");
     const formattedEndDate = format(new Date(endDate), "dd MMMM yy");
     let noOfDays = differenceInDays(new Date(endDate),new Date(startDate))
     noOfDays = noOfDays === 0 ? 1 : noOfDays
+    const ratePerDay = currency(hotel.ratePerMonth).divide(28).value
     const rateForTotalDays  = currency(hotel.ratePerMonth).divide(28).multiply(noOfDays).value
     const totalINR = rateForTotalDays+390+622.05
-    const handlePayment = () => {
-
+    const handlePayment = async() => {
+        let response = await fetch('/api/checkout',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                startDate,
+                endDate,
+                noOfDays,
+                noOfGuests,
+                user_id:user?.sub,
+                hotel_id:hotel._id
+            })
+        }).then(res => res.json())
+        console.log(response)
     }
     return (
         <div>
@@ -69,7 +87,7 @@ const checkout = ({hotel,startDate,endDate,noOfGuests}:CheckoutProps) => {
                         <div className="flex flex-col space-y-4">
                         <h1 className="text-2xl font-bold">Price details</h1>
                         <div className="flex items-center justify-between">
-                        <p>{hotel.ratePerMonth} x {noOfDays} nights</p>	
+                        <p>{currency(ratePerDay, { symbol:'₹',useVedic:true ,precision:0}).format()} x {noOfDays} nights</p>	
                         <p>{currency(rateForTotalDays, { symbol:'₹',useVedic:true ,precision:0}).format()}</p>
                         </div>
                         <div className="flex items-center justify-between">
@@ -96,31 +114,34 @@ const checkout = ({hotel,startDate,endDate,noOfGuests}:CheckoutProps) => {
 
 export default checkout
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const id = context.query.id
-    if(!id){
-        return {
-            redirect:{
-                permanent:false,
-                destination:'/'
+export const getServerSideProps = withPageAuthRequired({
+    getServerSideProps:async (context) => {
+        const {db} = await connectToDatabase()
+        const id = context.query.id as string
+        if(!id){
+            return {
+                redirect:{
+                    permanent:false,
+                    destination:'/'
+                }
             }
         }
-    }
-    const data = hotelsData.find(item => item.id === id)
-    if(!data){
-        return {
-            redirect:{
-                permanent:false,
-                destination:'/'
+        const data = await db.collection(collections.HOTELS).findOne({_id:new ObjectId(id)})
+        if(!data){
+            return {
+                redirect:{
+                    permanent:false,
+                    destination:'/'
+                }
             }
         }
-    }
-    return {
-        props:{
-            hotel:data,
-            startDate:context.query.startDate,
-            endDate:context.query.endDate,
-            noOfGuests:context.query.noOfGuests
+        return {
+            props:{
+                hotel:JSON.parse(JSON.stringify(data)),
+                startDate:context.query.startDate,
+                endDate:context.query.endDate,
+                noOfGuests:context.query.noOfGuests
+            }
         }
-    }
-} 
+    } 
+}) 
