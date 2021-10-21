@@ -2,7 +2,8 @@ import { format } from "date-fns";
 import { connectToDatabase } from "../utils/mongodb";
 import collections from "../utils/collections";
 import { GetServerSideProps } from "next";
-import { Hotel } from "../types/Hotels";
+import Head from 'next/head'
+import  Hotel  from "../types/Hotels";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import SearchCard from "../components/SearchCard";
@@ -25,6 +26,7 @@ const search = ({query,hotels}:SearchPageProps) => {
   const range = `${formattedStartDate} - ${formattedEndDate}`;
   return (
     <div>
+      <Head><title>Search Results</title></Head>
       <Header placeholder={`${location} | ${range} | ${noOfGuests} guests`} navbarState={true}/>
 
       <main className="flex max-h-screen pt-20">

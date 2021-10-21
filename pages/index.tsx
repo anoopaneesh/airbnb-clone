@@ -1,5 +1,6 @@
 import { GetStaticProps } from "next"
 import { connectToDatabase } from "../utils/mongodb"
+import Head from 'next/head'
 import collections from "../utils/collections"
 import  Explore  from "../types/Explore"
 import Live from "../types/Live"
@@ -47,6 +48,9 @@ const index = ({exploreData,liveData} : IndexProps) => {
   },[])
   return (
     <div>
+      <Head>
+        <title>Airbnb Clone | Creative World Inc</title>
+      </Head>
       <Header navbarState={navbarState}/>
       <Banner />
       <main className="max-w-7xl mx-auto px-8 sm:px-10">
