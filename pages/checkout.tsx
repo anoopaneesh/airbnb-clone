@@ -18,8 +18,9 @@ interface CheckoutProps{
     startDate:string
     endDate:string
     noOfGuests:string
+    callbackURL:string
 }
-const checkout = ({hotel,startDate,endDate,noOfGuests}:CheckoutProps) => {
+const checkout = ({hotel,startDate,endDate,noOfGuests,callbackURL}:CheckoutProps) => {
     const {user} = useUser()
     const formattedStartDate = format(new Date(startDate), "dd MMMM yy");
     const formattedEndDate = format(new Date(endDate), "dd MMMM yy");
@@ -28,7 +29,6 @@ const checkout = ({hotel,startDate,endDate,noOfGuests}:CheckoutProps) => {
     const ratePerDay = currency(hotel.ratePerMonth).divide(28).value
     const rateForTotalDays  = currency(hotel.ratePerMonth).divide(28).multiply(noOfDays).value
     const totalINR = rateForTotalDays+390+622.05
-    console.log()
     const handlePayment = async() => {
         const booking : Booking = {
             startDate,
@@ -46,7 +46,8 @@ const checkout = ({hotel,startDate,endDate,noOfGuests}:CheckoutProps) => {
             },
             body:JSON.stringify(booking)
         }).then(res => res.json())
-        const options = razorpay.getOptions(response)
+        
+        const options = razorpay.getOptions({order:response,booking,user,callbackURL})
         const _window = window as any
         const rzp1 = new _window.Razorpay(options);
         rzp1.open()
@@ -148,12 +149,14 @@ export const getServerSideProps = withPageAuthRequired({
                 }
             }
         }
+
         return {
             props:{
                 hotel:JSON.parse(JSON.stringify(data)),
                 startDate:context.query.startDate,
                 endDate:context.query.endDate,
-                noOfGuests:context.query.noOfGuests
+                noOfGuests:context.query.noOfGuests,
+                callbackURL:process.env.BASE_URL+'/completed'
             }
         }
     } 

@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import SearchCard from "../components/SearchCard";
 import Map from "../components/Map";
+import currency from "currency.js";
 interface Query{
   location: string;
   startDate: string;
@@ -65,7 +66,7 @@ export const getServerSideProps : GetServerSideProps = async(context) => {
     return {
         props:{
           query:context.query,
-          hotels:JSON.parse(JSON.stringify(hotelsData))
+          hotels:JSON.parse(JSON.stringify(hotelsData)),
         }
     }
 }
