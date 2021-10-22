@@ -50,6 +50,19 @@ const index = ({exploreData,liveData} : IndexProps) => {
     <div>
       <Head>
         <title>Airbnb Clone | Creative World Inc</title>
+        <meta property="og:url" content="http://airbnb-clone-anoop.vercel.app" />
+        <meta property="og:type" content="Hotel Booking Website" />
+        <meta property="fb:app_id" content="your fb app id" />
+        <meta
+          property="og:title"
+          content="Airbnb Clone | Creative World Inc."
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          property="og:description"
+          content="This is a clone of airbnb website.Made by Anoop P K"
+        />
+        <meta property="og:image" content="https://res.cloudinary.com/anoopaneesh/image/upload/v1634529650/airbnb/a7fe39da-3e57-44df-a744-9a73e482802d_b3orn7.png" />
       </Head>
       <Header navbarState={navbarState}/>
       <Banner />
