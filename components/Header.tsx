@@ -131,7 +131,7 @@ const Header = ({placeholder,navbarState}:HeaderProps) => {
         <Menu.Items className="bg-white absolute translate-y-6 -translate-x-28  w-48 rounded-md shadow-lg">
           {user ? (<>
           <Menu.Item>
-            {({active})=>(<a><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black font-bold">Trips</p></div></a>)}
+            {({active})=>(<a href="/trips"><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black font-bold">Trips</p></div></a>)}
           </Menu.Item>
           <Menu.Item>
             {({active})=>(<a href="/profile"><div className={active ? "menu-item-active" : "menu-item"}><p className="text-lg text-black font-bold">Account</p></div></a>)}

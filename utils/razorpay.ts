@@ -17,6 +17,13 @@ const verifyPayment = async(response:any,booking:Booking) => {
         body:JSON.stringify({response,booking})
     }).then(res => res.json())
     console.log(data)
+    let form = document.createElement('form')
+    let root = document.getElementById('__next')
+    root?.appendChild(form)
+    form.action = `${window.location.origin}/completed`
+    form.method = 'POST'
+    form.style.visibility = 'hidden'
+     form.submit()
 }
 const getOptions = ({order,booking,user,callbackURL}:GetOptionsProps) => {
     return  {
@@ -44,8 +51,6 @@ const getOptions = ({order,booking,user,callbackURL}:GetOptionsProps) => {
         "theme": {
             "color": "#3399cc"
         },
-        "callback_url":callbackURL,
-        "redirect":true,
     }
 }
 export default {getOptions}
